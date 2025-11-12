@@ -1,5 +1,6 @@
 package one.tmbrms.readingsns;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,15 @@ public class MainController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BookRepository bookRepository;
+
     @GetMapping("/")
     public String index(Model model){
-        model.addAttribute("articles", messageRepository.findAll().stream().map(m -> new Article(m)).toList());
+        model.addAttribute("articles", 
+          messageRepository.findAll().stream().map(m -> new Article(m)).sorted(
+            (a, b) -> Integer.compare(b.message.id, a.message.id)
+          ).toList());
         return "index";
     }
     
@@ -35,24 +42,34 @@ public class MainController {
     public String user(Model model, @PathVariable int id){
         model.addAttribute("user", userRepository.findById(id).get());
         model.addAttribute("articles", messageRepository.findByUserId(id).stream().map(m -> new Article(m)).toList()); 
+        model.addAttribute("alert", "");
         return "user";
     }
 
     @PostMapping("/post")
-    public String post(@RequestParam String userid, @RequestParam String isbn, @RequestParam String content){
+    public String post(Model model, @RequestParam int userid,
+                       @RequestParam String isbn,
+                       @RequestParam String content){
+
+        
         System.out.println(String.format("userid=%s, isbn=%s, content=%s", userid, isbn, content));
 
-        User user = null;
+        // useridが存在するか確かめる
+        User user = userRepository.findById(userid).get();
         
-        Book book = null;
+        // isbnがbookテーブルに存在するか確かめる
+        var bookOpt = bookRepository.findById(isbn);
+        if(!bookOpt.isPresent()){
+            model.addAttribute("user", user);
+            model.addAttribute("articles", messageRepository.findByUserId(userid).stream().map(m -> new Article(m)).toList()); 
+            model.addAttribute("alert", "登録されていない本です");
+            return "user";
+        }
         
-        Message message = null;
-
-        var article = new Article();
-        article.user = user;
-        article.book = book;
-        article.message = message;
-        
+        // Messageエンティティを作成して保存する
+        var message = new Message(
+            messageRepository.nextId(), user, bookOpt.get(), content, Instant.now().toString());
+        messageRepository.save(message);
         
         return "redirect:/";
     }

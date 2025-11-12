@@ -11,6 +11,9 @@ nav > ul {
 nav > ul > li {
     list-style: none;
 }
+form > ul > li {
+    list-style: none;
+}
 article {
     background: #f4fac5;
     margin-bottom: 5px;

@@ -21,7 +21,8 @@ public class Message {
     public String content;
     public String timestamp;
 
-    public Message(User user, Book book, String content, String timestamp) {
+    public Message(int id, User user, Book book, String content, String timestamp) {
+        this.id = id;
         this.user = user;
         this.book = book;
         this.content = content;
