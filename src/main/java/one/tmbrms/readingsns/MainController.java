@@ -2,6 +2,7 @@ package one.tmbrms.readingsns;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,11 +25,24 @@ public class MainController {
     private BookRepository bookRepository;
 
     @GetMapping("/")
-    public String index(Model model){
-        model.addAttribute("articles", 
-          messageRepository.findAll().stream().map(m -> new Article(m)).sorted(
-            (a, b) -> Integer.compare(b.message.id, a.message.id)
-          ).toList());
+    //(田村)キーワード検索のためパラメーター受取れるようにした
+    public String index(Model model, @RequestParam(name = "q", required = false) String q){
+
+        String keyword = (q == null) ? "" : q.trim();
+
+        //(田村)キーワード有無によりクエリを分岐
+        List<Message> messages = keyword.isEmpty()
+                ? messageRepository.findAll()
+                : messageRepository.findByContentContaining(keyword);
+
+        var articles = messages.stream()
+                .map(m -> new Article(m))
+                .sorted((a, b) -> Integer.compare(b.message.id, a.message.id))
+                .toList();
+
+        model.addAttribute("articles", articles);
+        model.addAttribute("query", keyword); 
+
         return "index";
     }
     
