@@ -1,8 +1,8 @@
 header {
-    background: #e6fac5;
+    background: #fee3ec;
 }
 nav {
-    background: #b3fb3f;
+    background: #dff7e6;
 }
 nav > ul {
     display: flex;
@@ -42,5 +42,5 @@ article > div.message > time {
     font-size: smaller;
 }
 footer {
-    background: #e6fac5;
+    background: #dff7e6;
 }
