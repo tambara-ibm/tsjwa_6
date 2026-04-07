@@ -24,6 +24,9 @@ public class MainController {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     @GetMapping("/")
     //(田村)キーワード検索のためパラメーター受取れるようにした
     public String index(Model model, @RequestParam(name = "q", required = false) String q){
@@ -36,12 +39,17 @@ public class MainController {
                 : messageRepository.findByContentContaining(keyword);
 
         var articles = messages.stream()
-                .map(m -> new Article(m))
+                .map(m -> {
+                    Article article = new Article(m);
+                    // 各投稿のコメントを取得
+                    article.comments = commentRepository.findByMessageId(m.id);
+                    return article;
+                })
                 .sorted((a, b) -> Integer.compare(b.message.id, a.message.id))
                 .toList();
 
         model.addAttribute("articles", articles);
-        model.addAttribute("query", keyword); 
+        model.addAttribute("query", keyword);
 
         return "index";
     }
@@ -84,6 +92,33 @@ public class MainController {
         var message = new Message(
             messageRepository.nextId(), user, bookOpt.get(), content, Instant.now().toString());
         messageRepository.save(message);
+        
+        return "redirect:/";
+    }
+
+    // コメント投稿エンドポイント
+    @PostMapping("/comment")
+    public String postComment(Model model,
+                             @RequestParam int messageId,
+                             @RequestParam int userId,
+                             @RequestParam String content){
+        
+        System.out.println(String.format("messageId=%d, userId=%d, content=%s",
+                                         messageId, userId, content));
+
+        // messageIdとuserIdの存在確認
+        Message message = messageRepository.findById(messageId).get();
+        User user = userRepository.findById(userId).get();
+        
+        // Commentエンティティを作成して保存
+        var comment = new Comment(
+            commentRepository.nextId(),
+            message,
+            user,
+            content,
+            Instant.now().toString()
+        );
+        commentRepository.save(comment);
         
         return "redirect:/";
     }
