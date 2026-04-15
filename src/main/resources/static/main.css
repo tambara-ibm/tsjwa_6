@@ -44,3 +44,118 @@ article > div.message > time {
 footer {
     background: #e6fac5;
 }
+/* (田村)検索フォーム */
+.search-box {
+    background: #f4fac5;
+    padding: 0.8rem;
+    margin: 0 0 1rem 0;
+    border-radius: 6px;
+}
+.search-box form {
+    display: flex;
+    gap: 0.5rem;
+}
+.search-box input[type="text"] {
+    flex: 1;
+    padding: 0.4rem;
+}
+.search-box button,
+.search-box a {
+    padding: 0.4rem 0.8rem;
+    background: #b3fb3f;
+    border-radius: 4px;
+    text-decoration: none;
+    color: black;
+}
+/* コメントセクション */
+.comments {
+    grid-column: 1 / -1;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-left: 3px solid #007bff;
+}
+
+.comments h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.comment {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.comment-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.comment-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-username {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.comment-content {
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+.comment-time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* コメント投稿フォーム */
+.comment-form {
+    grid-column: 1 / -1;
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.comment-form h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.comment-form select,
+.comment-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-family: inherit;
+}
+
+.comment-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.comment-form button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #0056b3;
+}

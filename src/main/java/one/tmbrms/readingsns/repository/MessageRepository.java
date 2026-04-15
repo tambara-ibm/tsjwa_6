@@ -12,5 +12,9 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
 
     @Query("SELECT MAX(m.id) + 1 FROM Message m")
     int nextId();
+    
+    // (田村) キーワード部分一致
+    List<Message> findByContentContaining(String keyword);
+
 }
     

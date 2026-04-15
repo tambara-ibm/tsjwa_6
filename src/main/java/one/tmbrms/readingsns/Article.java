@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import one.tmbrms.readingsns.entity.Book;
+import one.tmbrms.readingsns.entity.Comment;
 import one.tmbrms.readingsns.entity.Message;
 import one.tmbrms.readingsns.entity.User;
 import one.tmbrms.readingsns.repository.MessageRepository;
@@ -12,6 +13,7 @@ public class Article {
     public User user;
     public Book book;
     public Message message;
+    public List<Comment> comments;
 
     public Article(String csv) {
         var values = csv.split(",");

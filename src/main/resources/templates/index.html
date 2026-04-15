@@ -10,6 +10,23 @@
 <header>
 <h1>読書SNS</h1>
 </header>
+
+<!-- (田村)検索フォーム -->
+<section class="search-box">
+  <form th:action="@{/}" method="get">
+    <input type="text"
+           name="q"
+           placeholder="キーワードで検索"
+           th:value="${query}" />
+    <button type="submit">検索</button>
+    <a th:href="@{/}">クリア</a>
+  </form>
+
+  <div th:if="${#strings.isEmpty(query) == false}">
+    <span th:text="'検索キーワード: ' + ${query}"></span>
+  </div>
+</section>
+
 <nav>
 <ul>
     <li><a href="/">Top</a></li>
@@ -29,6 +46,35 @@
         <div class="message" th:object="${article.message}">
             <div class="content" th:text="*{content}">AIに意識を持たせるために二分心から考えたい</div>
             <time datetime="2024-01-11T01:11:11.111Z" th:datetime="*{{timestamp}}" th:text="*{{timestamp}}">2024/01/11 11:11</time>
+        </div>
+
+        <!-- コメント表示エリア -->
+        <div class="comments" th:if="${article.comments != null and !article.comments.isEmpty()}">
+            <h3>💬 コメント (<span th:text="${#lists.size(article.comments)}">0</span>件)</h3>
+            <div class="comment" th:each="comment : ${article.comments}">
+                <div class="comment-user">
+                    <img th:src="${comment.user.icon}" alt="user icon" class="comment-icon"/>
+                    <span class="comment-username" th:text="${comment.user.name}">ユーザー名</span>
+                </div>
+                <div class="comment-content" th:text="${comment.content}">コメント内容</div>
+                <time class="comment-time" th:text="${comment.timestamp}">2024-01-11 12:00</time>
+            </div>
+        </div>
+
+        <!-- コメント投稿フォーム -->
+        <div class="comment-form">
+            <h4>コメントを投稿</h4>
+            <form th:action="@{/comment}" method="post">
+                <input type="hidden" name="messageId" th:value="${article.message.id}"/>
+                <select name="userId" required>
+                    <option value="">ユーザーを選択</option>
+                    <option value="1">tambara</option>
+                    <option value="2">Eri KUWAHARA</option>
+                    <option value="3">harimoto</option>
+                </select>
+                <textarea name="content" placeholder="コメントを入力..." required></textarea>
+                <button type="submit">送信</button>
+            </form>
         </div>
     </article>
 </div>
